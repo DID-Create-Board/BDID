@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" src="/js/coinstack-1.1.19.min.js"></script>
+    <script src="https://code.jquery.com/jquery-latest.js "></script>
+    <script type="text/javascript" src="./js/bignumber.min.js"></script>
+    <script type="text/javascript" src="./js/web3-light.js"></script>
+    <script type="text/javascript" src="./js/contractabi.js"></script>
+    <script type="text/javascript" src="./js/qrcode.js"></script>
+    <!-- added qrcode -->
+    <script type="text/javascript" src="./js/qrcode.js"></script>
+
+    <!-- bootsrtap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+
+    <title>DID인증</title>
+    <script>
+      $(document).ready(function(){
+        let DEBUG = 1;
+  //       let client = new CoinStack('c7dbfacbdf1510889b38c01b8440b1', '10e88e9904f29c98356fd2d12b26de', 'c3sp2.blocko.io', 'https');
+        let qrcode = new QRCode(document.getElementById("qrcode"), {  // added_191126
+	         width : 250,
+	          height : 250
+          });
+
+		console.log('Web3 starting...');
+  		//connect web3 and check if web3 is connected correctly
+  	if (typeof web3 !== 'undefined') {
+  		web3 = new Web3(web3.currentProvider);
+  	} else {
+  		// set the provider you want from Web3.providers
+  		web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));  // geth client
+      // web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:7545"));  // Ganache
+
+  	}
+
+  		if (web3.isConnected()) {
+  			console.log("web3 connected");
+  		} else {
+  			console.log("web3 not connected");
+  			exit;
+  		}
+
+      let contractAddress = "0xb3d4ad3f1606524a81b8e4d508f918aefa580586";  // 배포한 컨트랙트 주소
+      let vc = web3.eth.contract(abi).at(contractAddress);
+      let listevent = vc.Instructor();  // // smartContract value = Coursetro.Instructor() , event define
+      listevent.watch(function(error, result){  // HTML event update
+              console.log(result);
+            if (!error) {
+             // $('#table1').text(result.args.pro);
+            //console.log("result numberOfProducts: ", result.args.numberOfProducts);
+            //console.log("result productList: ", result.args.productList);
+            //$("#result").text(result.args.numberOfProducts);
+            showList();
+            // let account = create();  // event를 받았을 때 account생성하기
+            // makeQR(account);
+          // input +="Result: " + result.args.age + "</p>";
+          //     idiv.innerHTML = input;
+            } else {
+                  console.log(error);
+            }
+        });  // end of listevent.watch(function(error, result){
+
+      			function showList() {
+          				let table = document.getElementById("tablePlace");
+          				let length = vc.getNumOfMembers();
+
+          				// 원래 테이블 지우기
+          				// $('#table').remove();
+          				let Parent = document.getElementById("tablePlace");
+          				while (Parent.hasChildNodes()) {
+          					Parent.removeChild(Parent.firstChild);
+          				}
+
+          				for (let i = 0; i < length; i++) {
+          					let product = vc.getMemberStruct(i);
+          					let toString = product.toString();
+          					// console.log("product: " + toString);
+          					let strArray = toString.split(",");
+
+          					// let timestamp = new Date(strArray[3]*1000);
+          					// console.log("timestamp: " + timestamp);
+          					// console.log("timestamp: " + strArray[3]*1000);
+
+          					let row = table.insertRow();
+          					let cell1 = row.insertCell(0);
+          					let cell2 = row.insertCell(1);
+          					// let cell3 = row.insertCell(2);
+          					// let cell4 = row.insertCell(3);
+          					cell1.innerHTML = strArray[0];
+          					cell2.innerHTML = strArray[1];
+          					// cell3.innerHTML = strArray[2];
+          					// cell4.style.width ="60%";
+          					// cell4.innerHTML = timestamp;
+          				}
+          			}  // end of showList()
+
+
+  function makeCode () {
+	let holderaddress = document.getElementById("holderaddress");
+  let prikey = document.getElementById("prikey");
+  let gender = document.getElementById("gender");
+  let age = document.getElementById("age");
+  // let obj = document.getElementById("fromaddress");
+	// let data = { "account": obj.value, "passwd": obj.value};
+	// let elText = JSON.stringify(data);
+	if (DEBUG) console.log("holderaddress.val :" , holderaddress.value);
+  if (DEBUG) console.log("prikey.val :" , prikey.value);
+  if (DEBUG) console.log("gender.val :" , gender.value);
+  if (DEBUG) console.log("age.val :" , age.value);
+  //
+  // if (!obj.value) {
+  //   alert("Input a text");
+  //   obj.focus();
+  //   return;
+  // }
+  // qrcode.makeCode();
+  // }
+
+	if (!holderaddress.value) {
+		alert("Input a text");
+		holderaddress.focus();
+		return;
+	}
+	qrcode.makeCode('holderaddress:' + holderaddress.value+ ',' + 'passwd:'+ prikey.value +',' + 'gender:' + gender.value + 'age:' + age.value);
+  }
+
+  $('#qrcodeBtn').on('click', function(){
+    if (DEBUG) console.log("qrcodeBtn");
+	   makeCode();
+   }) // end of qrcode
+
+        // if (DEBUG) {
+        //   console.log("client: ", client);
+        //   console.log('starting...');
+        // }
+
+        $('#newAccount').on('click', function(){
+        		  let passwd = 'eth';
+              if (DEBUG) console.log("passwd : ", passwd);
+        		  let newaccount = web3.personal.newAccount("passwd");  // newAccount added_191209
+              if (DEBUG) console.log("newaccount: ", newaccount);
+
+        $('#holderaddress').val(newaccount);   // click of #newAccount btn to QRcode  added_191209
+        $('#prikey').val(passwd);   // click of #newAccount btn to QRcode
+
+        $('#message').text(" newaccount: " + newaccount);
+        alert("Account 생성이 완료 되었습니다..!!!" + newaccount );
+        //$('#i_password').val(privateKey);
+
+      }); // end of $('#newAccount').on('click', function(){
+
+      }) // end of $(document).ready(function(){
+    </script>
+  </head>
+
+  <body>
+    <br />
+    <br />
+    <div class="container " role="main">
+      <h2><strong> Welcome to DID인증 </strong></h2>
+      <div id="tablePlace"></div>
+      <button id="newAccount">New Account</button>
+      <button id="qrcodeBtn"> Create QRCode </button>
+      <h5>Holder  <input id="holderaddress"  size="45" placeholder=""></input> </h5>
+      <h5>성별  <input  id="gender"  size="45" placeholder="성별" value="여"></input> </h5>
+      <h5>나이  <input  id="age"  size="45" placeholder="나이" value="10"></input> </h5>
+      <h5>지역  <input  id="area"  size="45" placeholder="지역" value="서울"></input> </h5>
+      <h5>성인did  <input id="didAdult"  size="45" placeholder=""></input> </h5>
+      <h5>비밀번호  <input type="password" id="prikey"   size="45" placeholder=""></input> </h5>
+    </div>
+    <br />
+    <br />
+    <div class="container " role="main">
+      <h4><strong> Message </strong></h4>
+      <div id="message"></div>
+      <div id="qrcode" style="width:250px; height:250px; margin-top:15px;"></div>
+    </div>
+    <hr />
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">
+          <b>Copyright &copy; DID Project 2019</b>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
