@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link rel='stylesheet' href='./style.css' type='text/css'/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="./lib/bignumber.min.js"></script>
+	<script type="text/javascript" src="./lib/web3-light.js"></script>
+	<script type="text/javascript" src="./contractabi.js"></script>
+	<script src="https://code.jquery.com/jquery-latest.js "></script>
+	<script type="text/javascript" src="./public/js/qrcode.js"></script>
+
+	<script type="text/javascript">
+
+		console.log('starting...');
+		//connect web3 and check if web3 is connected correctly
+		if (typeof web3 !== 'undefined') {
+			web3 = new Web3(web3.currentProvider);
+		} else {
+			// set the provider you want from Web3.providers
+			web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+		}
+
+		if (web3.isConnected()) {
+			console.log("connected");
+		} else {
+			console.log("not connected");
+			exit;
+		}
+
+		let contractAddress = "0xb626406efd976d76efc1bae4b4082591093c403c";  // 배포한 컨트랙트 주소
+		let vc = web3.eth.contract(abi).at(contractAddress);
+
+		let listevent = vc.Instructor();  // // smartContract value = Coursetro.Instructor() , event define
+		listevent.watch(function(error, result){  // HTML event update
+						console.log(result);
+					if (!error) {
+					 // $('#table1').text(result.args.pro);
+					//console.log("result numberOfProducts: ", result.args.numberOfProducts);
+					//console.log("result productList: ", result.args.productList);
+					//$("#result").text(result.args.numberOfProducts);
+					showList();
+					let account = create();  // event를 받았을 때 account생성하기
+
+					makeQR(account);
+				// input +="Result: " + result.args.age + "</p>";
+				//     idiv.innerHTML = input;
+					} else {
+								console.log(error);
+					}
+			});  // end of listevent.watch(function(error, result){
+
+		function showList() {
+			let table = document.getElementById("table1");
+			let length = vc.getNumOfAccounts();
+
+			// 원래 테이블 지우기
+			// $('#table').remove();
+			let Parent = document.getElementById("table1");
+			while (Parent.hasChildNodes()) {
+				Parent.removeChild(Parent.firstChild);
+			}
+
+			for (let i = 0; i < length; i++) {
+				let member = vc.getMemberStruct(i);
+				let toString = member.toString();
+				// console.log("product: " + toString);
+				let strArray = toString.split(",");
+
+				let timestamp = new Date(strArray[3]*1000);
+				console.log("timestamp: " + timestamp);
+				console.log("timestamp: " + strArray[3]*1000);
+
+				let row = table.insertRow();
+				let cell1 = row.insertCell(0);
+				let cell2 = row.insertCell(1);
+				let cell3 = row.insertCell(2);
+				let cell4 = row.insertCell(3);
+				cell1.innerHTML = strArray[0];
+				cell2.innerHTML = strArray[1];
+				cell3.innerHTML = strArray[2];
+				cell4.style.width ="60%";
+				cell4.innerHTML = timestamp;
+			}
+		} // end of function showList()
+
+		function create(){
+	    let password = document.getElementById("mempasswd").value; // "" 은 입력값이므로 주의!!!
+      let newAccount = web3.personal.newAccount(password);  // newAccount added_191126
+	    console.log("memAccount:", newAccount);
+			console.log("memPassword:", password);
+			//document.getElementById("memqr").value = newAccount;
+			return newAccount;
+		} // end of create()  added_191126
+
+
+		function makeQR(account){
+			// let memqr = document.getElementById("memqr").value;
+			let qrcode = new QRCode(document.getElementById("qrcode"), {
+ 			width : 250,
+ 			height : 250
+	 		});
+			qrcode.makeCode(account);  // qr lib
+		}
+
+		function addAccount() {
+			// let memnumber = document.getElementById("memnumber").value;
+			let memid = document.getElementById("memid").value;
+			let mempasswd = document.getElementById("mempasswd").value;
+			let remempasswd = document.getElementById("remempasswd").value;
+			let mempassemail = document.getElementById("mempassemail").value;
+      let account = document.getElementById("accounts").value;
+
+			if(mempasswd == remempasswd || mempasswd.length >= 6){
+				// 데이터 저장을 위한 계정 unlock
+				if (web3.personal.unlockAccount(account, document.getElementById('pass').value)) {
+					vc.addMemStru(memid,mempasswd,mempassemail, { from: account, gas: 2000000 }, function (err, result) {
+						if (!err) alert("트랜잭션이 성공적으로 전송되었습니다.\n" + result)
+					});
+				}
+			}else{
+				alert("비밀번호가 다르거나 짧습니다. 비밀번호를 다시 입력해주세요\n");
+			}
+
+
+		} // end of function addAccount()
+
+	</script>
+</head>
+
+<body>
+	<h1> 회원 관리 시스템</h1>
+	<div>
+		BlockChain계정:
+		<input type="text" id="accounts" value="0x6041c1996db8ef224d6f7e6e05a96bbf317d2a93">
+
+		Blockchain패스워드:
+		<input type="password" id="pass" value="eth"> </div>
+	<br>
+	<div>
+		<!-- <input type="text" id="memnumber" placeholder="How many.." value=1> -->
+		mem아이디입력:<input type="text" id="memid" placeholder="Member id.." value="lio">
+		mem패스워드입력:<input type="password" id="mempasswd" placeholder="Member password.." value="eth">
+		mem패스워드확인:<input type="password" id="remempasswd" placeholder="one more Member password.." value="eth">
+		mem이메일입력:<input type="text" id="mempassemail" placeholder="Member email.." value="1@naver.com">
+		<button onClick="addAccount()">가입하기</button>
+		<div id="newaccountaddr"></div>
+		<input type="text" id="memqr" placeholder="Member QR..">
+		<button onClick="makeQR()">QRCode생성</button>
+	</div>
+	<table style="width:100%" id="table1" />
+	<table style="width:100%" id="tablePlace" />
+	<div id="message"></div>
+	<div id="qrcode" style="width:250px; height:250px; margin-top:15px;"></div>
+	<script>
+		showList();
+	</script>
+</body>
+</html>

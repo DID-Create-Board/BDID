@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link rel='stylesheet' href='./style.css' type='text/css'/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="./lib/bignumber.min.js"></script>
+	<script type="text/javascript" src="./lib/web3-light.js"></script>
+	<script type="text/javascript" src="./contractabi.js"></script>
+	<script type="text/javascript">
+
+		console.log('starting...');
+		//connect web3 and check if web3 is connected correctly
+		if (typeof web3 !== 'undefined') {
+			web3 = new Web3(web3.currentProvider);
+		} else {
+			// set the provider you want from Web3.providers
+			web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+		}
+
+		if (web3.isConnected()) {
+			console.log("connected");
+		} else {
+			console.log("not connected");
+			exit;
+		}
+
+		web3.eth.defaultAccount = web3.eth.accounts[0];
+		var passwd = 'eth';
+
+		var event = true;
+		if(event){
+		var contractAddress = "0xcff085b0fe1ac2539bdab33394877744ea09aeee";  // event ver
+		var vc = web3.eth.contract(abi).at(contractAddress);
+		var listevent = vc.Instructor();  // // smartContract value = Coursetro.Instructor() , event define
+		listevent.watch(function(error, result){  // HTML event update
+						console.log(result);
+					if (!error) {
+					 // $('#table1').text(result.args.pro);
+					//console.log("result numberOfProducts: ", result.args.numberOfProducts);
+			 		//console.log("result productList: ", result.args.productList);
+			 		//$("#result").text(result.args.numberOfProducts);
+			 		showList();
+				// input +="Result: " + result.args.age + "</p>";
+				//     idiv.innerHTML = input;
+					} else {
+								console.log(error);
+					}
+			});
+		}else {
+	var contractAddress = "0x3595ba40c14b2a56d5a953cd201d74ab5eb28cec";
+	var vc = web3.eth.contract(abi).at(contractAddress);
+  }
+
+	// function create(){
+  //   let password = document.getElementById('accountpass').value;
+  //   let account = web3.personal.newAccount("password");  // newAccount added_191126
+  //   console.log("account:", account);
+  //   console.log("password:", password);
+  // } // end of create()  added_191126
+
+		function showList() {
+			var table = document.getElementById("table1");
+			var length = vc.getNumOfAccounts();
+
+			// 원래 테이블 지우기
+			// $('#table').remove();
+			var Parent = document.getElementById("table1");
+			while (Parent.hasChildNodes()) {
+				Parent.removeChild(Parent.firstChild);
+			}
+
+			for (var i = 0; i < length; i++) {
+				var product = vc.getAccountStruct(i);
+				var toString = product.toString();
+				// console.log("product: " + toString);
+				var strArray = toString.split(",");
+
+				var timestamp = new Date(strArray[3]*1000);
+				console.log("timestamp: " + timestamp);
+				console.log("timestamp: " + strArray[3]*1000);
+
+				var row = table.insertRow();
+				var cell1 = row.insertCell(0);
+				var cell2 = row.insertCell(1);
+				var cell3 = row.insertCell(2);
+				var cell4 = row.insertCell(3);
+				cell1.innerHTML = strArray[0];
+				cell2.innerHTML = strArray[1];
+				cell3.innerHTML = strArray[2];
+				cell4.style.width ="60%";
+				cell4.innerHTML = timestamp;
+			}
+		}
+
+		function addAccount() {
+			var memid = document.getElementById("memid").value;
+			var mempassword = document.getElementById("mempass").value;
+			var memail = document.getElementById("mememail").value;
+			// accountpass, password
+			// let password = document.getElementById('accountpass').value;
+			// let account = web3.personal.newAccount("password");  // newAccount added_191126
+			// console.log("account:", account);
+			// console.log("password:", password);
+// document.getElementById('accountpass').value)
+			if (web3.personal.unlockAccount(web3.eth.defaultAccount, passwd )) {
+				vc.addAccountStru(memid,mempass,mememail, { from: web3.eth.defaultAccount, gas: 2000000 }, function (err, result) {
+					if (!err) alert("트랜잭션이 성공적으로 전송되었습니다.\n" + result)
+				});
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<h1>회원 가입 시스템</h1>
+	<div>
+		<!-- account 패스워드:
+		<input type="text" id="accountpass" placeholder="accountpass"> -->
+		<p></p>
+		계정:
+		<input type="text" id="memid" value="1" placeholder="ID">
+		패스워드:
+		<input type="password" id="mempass" value="eth" placeholder="PW">
+		e-mail:
+		<input type="text" id="mememail" value="hyseo911@gmail.com" placeholder="hyseo911@gmail.com"> <button onClick="addAccount()">가입</button></div>
+	<br>
+	<div>
+		<!-- <input type="text" id="accountnum" placeholder="How many.." >
+		<input type="text" id="accountid" placeholder="account id..">
+		<input type="text" id="accountemail" placeholder="pls insert email.."> -->
+		<!-- <button onClick="addAccount()">가입</button> -->
+		<!-- <button onClick="javascript:create()">Create Account</button></h4> -->
+	</div>
+	<table style="width:100%" id="table1" />
+	<script>
+		showList();
+	</script>
+</body>
+</html>

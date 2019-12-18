@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="./js/bignumber.min.js"></script>
+	<script type="text/javascript" src="./js/web3-light.js"></script>
+	<script type="text/javascript" src="./js/contractabi.js"></script>
+	<script src="https://code.jquery.com/jquery-latest.js "></script>
+	<script type="text/javascript" src="/js/coinstack-1.1.19.min.js"></script>
+	<script type="text/javascript" src="./js/qrcode.js"></script>
+	<!-- bootsrtap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+
+	<script type="text/javascript">
+
+  $(document).ready(function(){
+
+		console.log('starting...');
+		//connect web3 and check if web3 is connected correctly
+	if (typeof web3 !== 'undefined') {
+		web3 = new Web3(web3.currentProvider);
+	} else {
+		// set the provider you want from Web3.providers
+		web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	}
+
+		if (web3.isConnected()) {
+			console.log("connected");
+		} else {
+			console.log("not connected");
+			exit;
+		}
+
+		let contractAddress = "0xb3d4ad3f1606524a81b8e4d508f918aefa580586";  // 배포한 컨트랙트 주소
+		let vc = web3.eth.contract(abi).at(contractAddress);
+		let listevent = vc.Instructor();  // // smartContract value = Coursetro.Instructor() , event define
+		listevent.watch(function(error, result){  // HTML event update
+						console.log(result);
+					if (!error) {
+					 // $('#table1').text(result.args.pro);
+					//console.log("result numberOfProducts: ", result.args.numberOfProducts);
+					//console.log("result productList: ", result.args.productList);
+					//$("#result").text(result.args.numberOfProducts);
+					showList();
+					// let account = create();  // event를 받았을 때 account생성하기
+					// makeQR(account);
+				// input +="Result: " + result.args.age + "</p>";
+				//     idiv.innerHTML = input;
+					} else {
+								console.log(error);
+					}
+			});  // end of listevent.watch(function(error, result){
+
+		function makeQR(account){
+			console.log("debug.makeQR", account);
+			let qrcode = new QRCode(document.getElementById("qrcode"), {
+			width : 250,
+			height : 250
+			});
+			qrcode.makeCode(account);  // qr lib
+		}
+
+  $('#newAccount').on('click', function(){
+		  let passwd = 'eth';
+		  let newaccount = web3.personal.newAccount("passwd");  // newAccount added_191126
+		  console.log("account:", newaccount);
+		  console.log("password:", passwd);
+			return newaccount;
+		}); // end of   $('#newAccount').on('click', function(){    added_191204
+
+			function showList() {
+				let table = document.getElementById("tablePlace");
+				let length = vc.getNumOfMembers();
+
+				// 원래 테이블 지우기
+				// $('#table').remove();
+				let Parent = document.getElementById("tablePlace");
+				while (Parent.hasChildNodes()) {
+					Parent.removeChild(Parent.firstChild);
+				}
+
+				for (let i = 0; i < length; i++) {
+					let product = vc.getMemberStruct(i);
+					let toString = product.toString();
+					// console.log("product: " + toString);
+					let strArray = toString.split(",");
+
+					// let timestamp = new Date(strArray[3]*1000);
+					// console.log("timestamp: " + timestamp);
+					// console.log("timestamp: " + strArray[3]*1000);
+
+					let row = table.insertRow();
+					let cell1 = row.insertCell(0);
+					let cell2 = row.insertCell(1);
+					// let cell3 = row.insertCell(2);
+					// let cell4 = row.insertCell(3);
+					cell1.innerHTML = strArray[0];
+					cell2.innerHTML = strArray[1];
+					// cell3.innerHTML = strArray[2];
+					// cell4.style.width ="60%";
+					// cell4.innerHTML = timestamp;
+				}
+			}
+
+
+  $('#addDidInfo').on('click', function(){
+				let passwd = 'eth';
+				let defaultAccount = "0xebd8daf6e5c0ca198c01a2f7ce98b1dd1a66f3f4";
+				let gender = document.getElementById("gender").value;
+				let age = document.getElementById("age").value;
+				if (web3.personal.unlockAccount(defaultAccount, passwd )) {
+					vc.AddVerifyAdultStru(gender,age, { from: defaultAccount, gas: 2000000 }, function (err, result) {
+						if (!err) alert("트랜잭션이 성공적으로 전송되었습니다.\n" + result)
+						// 새로 생성된 트랜잭션을 저장, mining
+						console.log("AddVerifyAdultStru:",result);
+					});
+				} // end of if (web3.personal.unlockAccount(defaultAccount, passwd )) {
+			}); // end of $('#addDidInfo').on('click', function(){
+
+		}) // end of $(document).ready(function(){   added_191204
+	</script>
+</head>
+
+<body>
+	<br />
+	<br />
+	<div class="container " role="main">
+		<h1> DID 관리 시스템</h1>
+		<div id="tablePlace"></div>
+		<button id="newAccount">New Account</button>
+		<button id="qrcodeBtn"> Create QRCode </button>
+		<div> Provider:
+			<input type="text" id="gender" placeholder="성별 남.여 선택">
+			<input type="text" id="age" placeholder="나이.."><button id="addDidInfo">DidInfo입력</button></div>
+	</div>
+	<!-- <select name="provider">
+	    <option value="">요청선택</option>
+	    <option value="성별">성별</option>
+	    <option value="나이" selected="selected">나이</option>
+	    <option value="지역">지역</option>
+	</select> -->
+	<br />
+	<br />
+	<div class="container " role="main">
+		<h4><strong> Message </strong></h4>
+		<div id="message"></div>
+		<div id="qrcode" style="width:250px; height:250px; margin-top:15px;"></div>
+	</div>
+	<hr />
+	<footer class="py-5 bg-dark">
+		<div class="container">
+			<p class="m-0 text-center text-white">
+				<b>Copyright &copy; DID Project 2019</b>
+			</p>
+		</div>
+	</footer>
+</body>
+</html>
