@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <title>DID_회원가입</title>
+    <script>
+      function btn() {
+        alert('회원가입이 완료되었습니다');
+      }
+    </script>
+    <style>
+      /* reset */
+      .input_wrap {
+      }
+      .i_wrap .row .i_wrap {
+        margin-bottom: 5px;
+        border: 1px solid gray;
+      }
+
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      ul,
+      fieldset {
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        color: dimgray;
+      }
+
+      fieldset {
+        border: 0;
+      }
+      legend {
+        font-size: 0;
+        line-height: 0;
+        visibility: hidden;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        text-indent: -9999px;
+      }
+
+      inptu {
+        vertical-align: middle;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      /* form */
+      .input_wrap {
+      }
+      .input_wrap .col {
+        border: 1px solid gary;
+        display: table;
+        width: 100%;
+      }
+      .input_wrap .col .row {
+        background-color: whitesmoke;
+        display: table-row;
+      }
+      .input_wrap .col .row .col-tit {
+        background-color: darkgrey;
+        border: 1px solid gray;
+        display: table-cell;
+        width: 15%;
+        height: 5px;
+        vertical-align: middle;
+        padding: 10px;
+        padding: 8px 20px;
+        font-size: 12px;
+      }
+
+      .input_wrap .col .row .col-content {
+        border: 1px solid gray;
+        display: table-cell;
+        width: 85%;
+        height: 5px;
+        padding: 10px;
+        padding: 8px 20px;
+      }
+
+      .selet {
+        border: 1px solid black;
+
+        width: 100%;
+      }
+
+      .btn_phone_confirm {
+        border: 1px solid black;
+        border-radius: 3px;
+        display: inline-block;
+        width: 100px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 10px;
+        font-weight: bold;
+        color: dimgray;
+      }
+
+      .btn_address {
+        border: 1px solid black;
+        background-color: darkgray;
+        border-radius: 5px;
+        display: inline-block;
+        width: 100px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #fff;
+        vertical-align: middle;
+      }
+
+      .inpTxt {
+        border: 1px solid #d9d9d9;
+        height: 34px;
+        padding: 9px;
+        box-sizing: border-box;
+        font-size: 12px;
+        color: gray;
+      }
+
+      .btn_road_add {
+        border: 1px solid black;
+        border-radius: 3px;
+        display: inline-block;
+        width: 100px;
+        height: 32px;
+        text-align: center;
+        line-height: 32px;
+        font-size: 10px;
+        font-weight: bold;
+        color: dimgray;
+      }
+      .btn {
+        display: inline-block;
+        padding-left: 30px;
+        padding-right: 30px;
+        height: 60px;
+        line-height: 60px;
+        border: 1px solid #d9d9d9;
+        border-radius: 8px;
+        box-sizing: border-box;
+        border-radius: 8px;
+      }
+
+      .btn_type02 {
+        background-color: #fff;
+        border: 1px solid #d9d9d9;
+        color: #747474;
+      }
+
+      .w106 {
+        width: 106px;
+      }
+      .w106 {
+        width: 123px;
+      }
+      .w106 {
+        width: 165px;
+      }
+      .w106 {
+        width: 180px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <h1 class="tit">회원가입</h1>
+      <form id="" name="" method="post" action="">
+        <fieldset>
+          <legend>필수정보입력 입력폼</legend>
+          <div class="con_tit">
+            <h2></h2>
+            <p>
+              문자와 이메일 수신동의를 체크해 주시면 진행되는 이벤트 및 다양한
+              쇼핑 정보를 받아보실 수 있습니다.
+            </p>
+          </div>
+          <!--//con_tit -->
+
+          <div class="input_wrap">
+            <div class="col">
+              <div class="row">
+                <div class="col-tit">이름</div>
+                <div class="col-content">
+                  <input
+                    type="text"
+                    id="UserName"
+                    class="inpTxt w180"
+                    placeholder="이름입력"
+                  />
+                </div>
+              </div>
+              <!--//row -->
+
+              <div class="row">
+                <div class="col-tit">아이디</div>
+                <div class="col-content">
+                  <input
+                    type="text"
+                    class="inpTxt w180"
+                    placeholder="영문,숫자조합 4~12자"
+                  />
+                </div>
+              </div>
+              <!--//row -->
+
+              <div class="row">
+                <div class="col-tit">비밀번호</div>
+                <div class="col-content">
+                  <input
+                    type="password"
+                    class="inpTxt"
+                    placeholder="영문,숫자조합 4~12자"
+                  />
+                </div>
+              </div>
+              <!--//row -->
+
+              <div class="row">
+                <div class="col-tit">비밀번호 확인</div>
+                <div class="col-content">
+                  <input
+                    type="password"
+                    class="inpTxt w180"
+                    placeholder="비밀번호 재입력"
+                  />
+                </div>
+              </div>
+              <!--//row -->
+
+              <div class="row">
+                <div class="col-tit">휴대폰</div>
+                <div class="col-content">
+                  <select>
+                    <option value="010">010</option>
+                    <option value="011">011</option>
+                    <option value="011">016</option>
+                  </select>
+                  -
+                  <input type="text" id="HPhone2" class="phone" />
+                  -
+                  <input type="text" id="HPhone2" class="phone" />
+
+                  <a href="#" class="btn_phone_confirm"> 인증번호발송 </a>
+                  <input type="checkbox" id="phone" />
+                  <label for="phone">문자 수신동의 </label>
+                </div>
+              </div>
+              <!--//row -->
+
+              <div class="row">
+                <div class="col-tit">이메일</div>
+                <div class="col-content">
+                  <input type="text" id="Email1" class="email w180" />
+                  @
+                  <input type="text" id="Email2" />
+
+                  <select>
+                    <option value="naver.com">naver.com</option>
+                    <option value="gmail.com">gmail.com</option>
+                    <option value="hanmail.net">hanmail.net</option>
+                  </select>
+
+                  <input type="checkbox" id="mail_agree" />
+                  <label for="mail_agree">이메일 수신동의</label>
+                </div>
+              </div>
+              <!--//row -->
+
+              <div class="row">
+                <div class="col-tit ">주민등록번호</div>
+                <div class="col-content">
+                  <input type="text" title="기간선택" class="month w180" />
+                </div>
+              </div>
+              <!--//row -->
+            </div>
+          </div>
+          <!--//input_wrap -->
+        </fieldset>
+        <fieldset>
+          <legend>선택정보입력 입력폼</legend>
+          <h3>선택정보입력</h3>
+          <div class="input_wrap">
+            <div class="col">
+              <div class="row">
+                <div class="col-tit">인증</div>
+                <div class="col-content">
+                
+                  <label for="여자">인증되었을시,아이디,비번만 저장되고 다른정보는 삭제합니다.</label>
+                 
+                  <input type="checkbox" />개인정보처리방침 동의
+                  <br>
+                  <br>
+                  <button onclick="javascript:btn()">회원가입</button>
+                </div>
+
+              </div>
+              <!--// row-->
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>

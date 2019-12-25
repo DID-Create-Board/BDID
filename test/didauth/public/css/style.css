@@ -479,7 +479,7 @@ a:hover, a:active, a:focus {
 -----------------------------------------*/
 
 #newsletter {
-    background: #535bd4 url('../images/newsletter-bg.jpg') no-repeat;
+    background: #535bd4 url('/images/newsletter-bg.jpg') no-repeat;
     background-size: cover;
     background-position: center center;
     color: #ffffff;

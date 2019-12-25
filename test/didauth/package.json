@@ -1,0 +1,33 @@
+{
+  "name": "didauth",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chrome-launcher": "^0.11.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.4",
+    "crypto": "^1.0.1",
+    "ejs": "^2.7.4",
+    "express": "^4.17.1",
+    "express-error-handler": "^1.1.0",
+    "express-mysql-session": "^2.1.0",
+    "express-session": "^1.17.0",
+    "mongoose": "^5.8.3",
+    "mysql": "^2.17.1",
+    "ngrok": "^3.2.7",
+    "pass": "^0.2.0",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-kakao": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "passport-naver": "^1.0.6",
+    "serve-static": "^1.14.1"
+  }
+}
