@@ -21,7 +21,8 @@
       const reqID = 'disclosureReq'
  
       uport.requestDisclosure(
-        {verified: ['Example']}
+        // {verified: ['Example']}
+        {verified: ['Identity']}
       )
  
       uport.onResponse('disclosureReq').then(res => {

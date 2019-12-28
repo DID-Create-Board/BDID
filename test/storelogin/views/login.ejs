@@ -11,11 +11,29 @@
 
         body {
           text-align: center;
-      
-    border-bottom: 30px solid blue;
-    
-    
-  }
+          border-bottom: 30px solid blue;
+        }
+
+        #btn_group button{ 
+            width:300px;
+            background-color: #585bf8;
+            border: none;
+            color:#fff;
+            padding: 15px 0;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 15px;
+            margin: 4px;
+            cursor: pointer;
+       }
+
+        #btn_group button:hover{ 
+            color:white; 
+            background-color: rgb(241, 121, 161); 
+        }
+
+
   
   </style>
   
@@ -29,7 +47,7 @@
                 <% if(message.length >0){ %>
                     <div class="alert alert-danger"><%= message %></div>
                 <% } %>
-                    <form action="/login" method="POST" name ="fo">
+                    <form action="/login"  method="POST" name ="fo">
                         <div class = "form-group">
                             <label>Username : </label>
                             <input type="text" class="form-control" name="id">
@@ -38,18 +56,24 @@
                             <label>password : </label>
                             <input type="password" class ="form-control" name="password">
                         </div>
-                        <button type="submit" class="btn btn-warning btn-lg">로그인</button>
+                        <div id=btn_group>
+                            <button type="submit" class="btn btn-warning btn-lg">로그인</button>
+                        </div>
+                        
                     </form>
-
-                    <form action="/signup" method="get" name ="regiteration">
-                        <button type="submit" class="btn btn-warning btn-lg">회원가입</button>
-                    </form>
-
-                    <p></p>
+  
+  
+                                    <form action="/signup" method="get" name ="regiteration">
+                                        <button type="submit" class="btn btn-warning btn-lg">회원가입</button>
+                                    </form>
+            
+                    <br>
+                    <br>
+                    <!-- <p></p>
                     <button findid="">아이디 찾기</button>
                     <button findPassword="">비밀번호 찾기</button>
                     <button updatePassword="">비밀번호 변경</button>
-                    <br><p>
+                    <br><p> -->
                     <img src="/images/gimon.png" width:200px height:200pxr >
     </body>
 </html>
