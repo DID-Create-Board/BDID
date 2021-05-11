@@ -1,3 +1,6 @@
+
+해당 코드에 security vulnerabilities  발견되어 일부 repo 정리합니다. 양해바랍니다.
+
 # DCB팀 프로젝트 작업 폴더입니다.
 - Docs
   - 프로젝트기획서_DCB팀_v001(피드백내용 표시함).ppt
